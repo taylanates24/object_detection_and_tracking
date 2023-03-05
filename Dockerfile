@@ -1,6 +1,6 @@
 FROM nvcr.io/nvidia/pytorch:22.12-py3
 
-ARG CUDA=11.8
+ARG CUDA=11.6
 ARG TORCH_VERSION=1.8.0
 ARG TORCHVISION_VERSION=0.9.0
 
@@ -8,26 +8,28 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 ### update apt and install libs
 RUN apt-get update &&\
-    apt-get install -y vim cmake libsm6 libxext6 libxrender-dev libgl1-mesa-glx git
+    apt-get install -y vim libsm6 libxext6 libxrender-dev libgl1-mesa-glx git wget libssl-dev libopencv-dev libspdlog-dev p7zip-full --no-install-recommends &&\
+    rm -rf /var/lib/apt/lists/*
 
-### create folder
-#RUN mkdir ~/space &&\
-#    mkdir /root/.pip
+RUN curl -fsSL -v -o ~/miniconda.sh -O  https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh  && \
+    chmod +x ~/miniconda.sh && \
+    ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    /opt/conda/bin/conda install -y python=${PYTHON_VERSION} conda-build pyyaml numpy ipython cython typing typing_extensions mkl mkl-include ninja && \
+    /opt/conda/bin/conda clean -ya
 
-### set pip source
-# COPY ./pip.conf /root/.pip
-
-### pytorch
-#RUN pip3 install torch==${TORCH_VERSION}+cu${CUDA//./} torchvision==${TORCHVISION_VERSION}+cu${CUDA//./} -f https://download.pytorch.org/whl/torch_stable.html
-RUN pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu118
-
+ENV PATH /opt/conda/bin:$PATH
+RUN pip install --upgrade pip
+RUN pip install -U openmim
+RUN pip3 install torch torchvision torchaudio
 ### install mmcv
 RUN pip3 install pytest-runner
 RUN pip3 install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu${CUDA//./}/torch${TORCH_VERSION}/index.html
 
 ### git mmdetection
+RUN pip install --upgrade pip
 RUN git clone --depth=1 https://github.com/open-mmlab/mmdetection.git /root/space/mmdetection
-RUN pip3 install numpy==1.20
+RUN pip3 install numpy
 ### install mmdetection
 RUN cd /root/space/mmdetection &&\
     pip3 install -r requirements.txt &&\
@@ -62,20 +64,24 @@ RUN cd /root/space/mmdetection-to-tensorrt &&\
     python3 setup.py develop
 
 RUN python -m pip install --upgrade pip setuptools
-RUN pip install tensorflow==2.2.0 \
-      Pillow \
-      matplotlib \
-      moviepy \
-      scipy \ 
-      opencv-python \
-      object-detection
+RUN pip install Pillow \
+      matplotlib
 
-RUN pip install scikit-learn==0.22.2 \
-                opencv-python==4.6.0.66 \
-                opencv==4.6.0 \ 
-                opencv-python-headless==4.6.0.66
-RUN apt install -y libgtk2.0-dev pkg-config
-
+RUN pip install --no-cache-dir \
+    grad-cam==1.4.6 \
+    tensorboard==2.10.1 \
+    fiftyone==0.17.2 \
+    fast-coco-eval \
+    opencv-python==4.6.0.66 \
+    scipy==1.9.3 \
+    scikit-learn==1.1.3 \
+    scikit-image==0.19.3 \
+    torch-optimizer==0.3.0 \
+    pytorch-optimizer==2.2.0 \
+    clearml==1.9.1 \
+    setuptools==58.2.0 \
+    numpy==1.23.5
+    
 WORKDIR /root/space
 
 CMD [ "--help" ]
