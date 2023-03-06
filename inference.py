@@ -11,12 +11,14 @@ import matplotlib
 #plt.style.use('ggplot')
 matplotlib.use('TkAgg')
 
-def draw_boxes(img, box, thickness, class_names, label, score, font=1):
-    alpha = 0.9
+def draw_boxes(img, box, thickness, class_names, label, score, colors, font=1, eps=0.01, font_size=13):
+    alpha = 0.7
+
+    color = colors[label]
     pos = np.array([box[1], box[0]]) - thickness
-    
+
     #for box, label, pos, score in zip(bboxes, labels, positions, scores):#, ids):
-        
+
     #label_text = str(id)
     label_text =f'{class_names[label]}'
     
@@ -24,20 +26,22 @@ def draw_boxes(img, box, thickness, class_names, label, score, font=1):
     #left, top, right, bottom = int(bbox_cv2[1]), int(bbox_cv2[0]), int(bbox_cv2[3]), int(bbox_cv2[2])
     pt1 = (int(box[1]), int(box[0]))
     pt2 = (int(box[3]), int(box[2]))
-    cv2.rectangle(img,pt1,pt2,(255,0,0),2)
-    overlay = img.copy()
-    text_size, _ = cv2.getTextSize(label_text, font, 0.7, 1)
+    cv2.rectangle(img,pt1,pt2,color,2)
+    overlay = img.copy()        #(241,101,72)
+    text_size, _ = cv2.getTextSize(label_text, font, 0.8, 1)
     text_scale = int((int(box[1]) - int(box[0])) / 200)
     text_w, text_h = text_size
-    
+    text_w += 2
+    text_h += 2
+
     x, y = pos
-    cv2.rectangle(overlay, pos, (x + text_w, y + text_h), (127,127,127), -1)
+    cv2.rectangle(overlay, pos, (x + text_w, y + text_h), (0,0,0), -1)
     img = cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0)
     cv2.putText(img, label_text, (x, y + text_h ), font, 
-            0.7, (0,0,255), 1, cv2.LINE_AA)
+            0.8, color, 1, cv2.LINE_AA)
     return img
 
-def pipeline(img, detector, frame_count, max_age, min_hits, tracker_list, track_id_list):
+def pipeline(img, detector, frame_count, max_age, min_hits, tracker_list, track_id_list, colors):
     '''
     Pipeline function for detection and tracking
     '''
@@ -78,7 +82,7 @@ def pipeline(img, detector, frame_count, max_age, min_hits, tracker_list, track_
              x_cv2 = trk.box
              label = trk.label
              score = trk.score
-             img = draw_boxes(img, x_cv2, 2, detector.detector.CLASSES, label, score)
+             img = draw_boxes(img, x_cv2, 2, detector.detector.CLASSES, label, score, colors)
              
 
              #img= helpers.draw_box_label(img, x_cv2) # Draw the bounding boxes on the 
@@ -88,9 +92,11 @@ def pipeline(img, detector, frame_count, max_age, min_hits, tracker_list, track_
     
     for trk in deleted_tracks:
             track_id_list.append(trk.id)
-    
+            if len(track_id_list) > 50:
+                del track_id_list[0]
+
     tracker_list = [x for x in tracker_list if x.no_losses<=max_age]    
-       
+
     return img
 
 
@@ -104,17 +110,18 @@ if __name__ == "__main__":
     
     tracker_list =[] # list for trackers
     # list for track ID
-    track_id_list= deque(list(range(10000)))
+    track_id_list= deque(list(range(20)))
     debug = True
     detector = Detector()
-    
+    colors = [(255, 255, 0), (0, 255, 255), (241,101,72), (128, 128, 0), (128, 0, 128), (0, 0, 255), (128, 0, 128), (128, 0, 0),
+              (128, 0, 128), (255, 0, 255)]
     if debug: # test on a sequence of images
         #images = [plt.imread(file) for file in sorted(glob.glob('./2/*.jpg'))]
         cap = cv2.VideoCapture('/workspaces/detection_and_tracking/tokyo.mp4')
         while(cap.isOpened()):
             ret, frame = cap.read()
             #image = images[i]
-            image_box = pipeline(frame, detector, frame_count, args.max_age, args.min_hits, tracker_list, track_id_list)
+            image_box = pipeline(frame, detector, frame_count, args.max_age, args.min_hits, tracker_list, track_id_list, colors)
             #cv2.imwrite('frame' + str(i) + '.jpg', image_box)
             cv2.imshow('frame', image_box)   
             cv2.waitKey(30)
