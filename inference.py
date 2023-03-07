@@ -91,7 +91,7 @@ if __name__ == "__main__":
     parser.add_argument('--min_hits', type=int, default=1, help='Number of consecutive matches needed to establish a track.')
     parser.add_argument('--input_video', type=str, default='/workspaces/detection_and_tracking/tokyo_1.mp4', 
                         help='The path of input video.')
-    
+    parser.add_argument('--skip_frame', type=int, default=0, help='Number of frames that only tracked, not detected by model.')
     args = parser.parse_args()
     frame_count = 0
     tracker_list = []
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     while(cap.isOpened()):
         ret, frame = cap.read()
 
-        image_box = pipeline(frame, detector, frame_count, args.max_age, args.min_hits, tracker_list, track_id_list, colors, 0)
+        image_box = pipeline(frame, detector, frame_count, args.max_age, args.min_hits, tracker_list, track_id_list, colors, args.skip_frame)
         frame_count += 1
         
         cv2.imshow('frame', image_box)   
