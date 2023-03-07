@@ -83,32 +83,43 @@ def pipeline(img, detector, frame_count, max_age, min_hits, tracker_list, track_
 
     return img
 
-
 if __name__ == "__main__":    
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--max_age', type=int, default=2, help='Number of consecutive unmatched detection before a track is deleted.')
+    parser.add_argument('--checkpoint', type=str, default='/workspaces/detection_and_tracking/yolox_xl_epoch_329_32-2map_trt.pth', 
+                        help='The TensorRT checkpoint path.')
+    parser.add_argument('--config', type=str, default='/workspaces/detection_and_tracking/yolox_x_8x8_300e_coco.py', 
+                        help='The config path of mmdetection model.')
+    parser.add_argument('--score_thr', type=int, default=0.4, help='Score threshold.')
     parser.add_argument('--min_hits', type=int, default=1, help='Number of consecutive matches needed to establish a track.')
     parser.add_argument('--input_video', type=str, default='/workspaces/detection_and_tracking/tokyo_1.mp4', 
                         help='The path of input video.')
     parser.add_argument('--skip_frame', type=int, default=0, help='Number of frames that only tracked, not detected by model.')
+    parser.add_argument('--save_video', type=bool, default=False, help='Saving output video.')
+    parser.add_argument('--save_video_path', type=str, default='out.mp4', help='Output video path.')
     args = parser.parse_args()
     frame_count = 0
     tracker_list = []
 
     track_id_list = deque(list(range(30)))
 
-    detector = Detector()
+    detector = Detector(checkpoint_path=args.checkpoint, 
+                        model_config_path=args.config,
+                        score_thr=args.score_thr)
+    
     colors = [(255, 255, 0), (0, 255, 255), (241,101,72), (128, 128, 0), (128, 0, 128), (0, 0, 255), (128, 0, 128), (128, 0, 0),
               (128, 0, 128), (255, 0, 255)]
 
     cap = cv2.VideoCapture(args.input_video)
-    #frame_width = int(cap.get(3))
-    #frame_height = int(cap.get(4))
-    #size = (frame_width, frame_height)
-    #result = cv2.VideoWriter('/workspaces/detection_and_tracking/results.mp4', 
-    #                cv2.VideoWriter_fourcc(*'MJPG'),
-    #                30, size)
+    
+    if args.save_video:
+        frame_width = int(cap.get(3))
+        frame_height = int(cap.get(4))
+        size = (frame_width, frame_height)
+        result = cv2.VideoWriter(args.save_video_path, 
+                        cv2.VideoWriter_fourcc(*'MJPG'),
+                        30, size)
     
     while(cap.isOpened()):
         ret, frame = cap.read()
@@ -116,9 +127,14 @@ if __name__ == "__main__":
         image_box = pipeline(frame, detector, frame_count, args.max_age, args.min_hits, tracker_list, track_id_list, colors, args.skip_frame)
         frame_count += 1
         
+        if args.save_video:
+            result.write(image_box)
+            
         cv2.imshow('frame', image_box)   
         cv2.waitKey(20)
         
     cap.release()
-    #result.release()
+    
+    if args.save_vide:
+        result.release()
 
