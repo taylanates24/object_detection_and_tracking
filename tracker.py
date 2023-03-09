@@ -66,18 +66,18 @@ class Tracker(): # class for Kalman Filter-based tracker
         Implement the Kalman Filter, including the predict and the update stages,
         with the measurement z
         '''
-        x = self.x_state
+        
         # Predict
-        x = dot(self.F, x)
+        self.x_state = dot(self.F, self.x_state)
         self.P = dot(self.F, self.P).dot(self.F.T) + self.Q
 
         #Update
         S = dot(self.H, self.P).dot(self.H.T) + self.R
         K = dot(self.P, self.H.T).dot(inv(S)) # Kalman gain
-        y = z - dot(self.H, x) # residual
-        x += dot(K, y)
+        y = z - dot(self.H, self.x_state) # residual
+        self.x_state += dot(K, y)
         self.P = self.P - dot(K, self.H).dot(self.P)
-        self.x_state = x.astype(int) # convert to integer coordinates 
+        self.x_state = self.x_state.astype(int) # convert to integer coordinates 
                                      #(pixel values)
         
     def predict_only(self):  
@@ -85,8 +85,8 @@ class Tracker(): # class for Kalman Filter-based tracker
         Implment only the predict stage. This is used for unmatched detections and 
         unmatched tracks
         '''
-        x = self.x_state
+        
         # Predict
-        x = dot(self.F, x)
+        self.x_state = dot(self.F, self.x_state)
         self.P = dot(self.F, self.P).dot(self.F.T) + self.Q
-        self.x_state = x.astype(int)
+        self.x_state = self.x_state.astype(int)
