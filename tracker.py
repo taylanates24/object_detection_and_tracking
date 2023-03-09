@@ -1,7 +1,7 @@
 import numpy as np
 from numpy import dot
 from scipy.linalg import inv, block_diag
-
+from typing import List
 
 class Tracker(): # class for Kalman Filter-based tracker
     def __init__(self):
@@ -61,11 +61,7 @@ class Tracker(): # class for Kalman Filter-based tracker
         
         
         
-    def kalman_filter(self, z): 
-        '''
-        Implement the Kalman Filter, including the predict and the update stages,
-        with the measurement z
-        '''
+    def kalman_filter(self, z: List[int]): 
         
         # Predict
         self.x_state = dot(self.F, self.x_state)
@@ -81,10 +77,6 @@ class Tracker(): # class for Kalman Filter-based tracker
                                      #(pixel values)
         
     def predict_only(self):  
-        '''
-        Implment only the predict stage. This is used for unmatched detections and 
-        unmatched tracks
-        '''
         
         # Predict
         self.x_state = dot(self.F, self.x_state)
