@@ -1,4 +1,4 @@
-_base_ = ['/workspaces/detection_and_tracking/_base_/schedules/schedule_1x.py', '/workspaces/detection_and_tracking/_base_/default_runtime.py']
+_base_ = ['./_base_/schedules/schedule_1x.py', './_base_/default_runtime.py']
 
 img_scale = (640, 640)  # height, width
 
