@@ -7,7 +7,7 @@ import cv2
 
 def process_unmatched_detections(z_box: List[np.ndarray], unmatched_dets: np.ndarray, 
                                  x_box: List[int], tracker_list: List[Callable], track_id_list: deque, 
-                                 labels: List[int], scores: np.ndarray):
+                                 labels: List[int], scores: np.ndarray) -> None:
     
     for idx in unmatched_dets:
         
@@ -34,7 +34,7 @@ def process_unmatched_detections(z_box: List[np.ndarray], unmatched_dets: np.nda
         
 
 def process_matched_detections(matched: np.ndarray, z_box: List, x_box: List[List[int]], 
-                               tracker_list: List[Callable], labels: np.ndarray, scores: np.ndarray):
+                               tracker_list: List[Callable], labels: np.ndarray, scores: np.ndarray) -> None:
 
     for trk_idx, det_idx in matched:
         
@@ -59,7 +59,7 @@ def process_matched_detections(matched: np.ndarray, z_box: List, x_box: List[Lis
         tmp_trk.score = score
 
 
-def process_unmatched_trackers(unmatched_trks: np.ndarray, x_box: List[List[int]], tracker_list: List[Callable]):
+def process_unmatched_trackers(unmatched_trks: np.ndarray, x_box: List[List[int]], tracker_list: List[Callable]) -> None:
     
     for trk_idx in unmatched_trks:
         
@@ -72,7 +72,7 @@ def process_unmatched_trackers(unmatched_trks: np.ndarray, x_box: List[List[int]
         tmp_trk.box = x_state
         x_box[trk_idx] = x_state
 
-def calc_iou(bboxes1: np.ndarray, bboxes2: np.ndarray):
+def calc_iou(bboxes1: np.ndarray, bboxes2: np.ndarray) -> float:
     x11, y11, x12, y12 = np.split(bboxes1, 4, axis=1)
     x21, y21, x22, y22 = np.split(bboxes2, 4, axis=1)
     xA = np.maximum(x11, np.transpose(x21))
@@ -89,7 +89,7 @@ def calc_iou(bboxes1: np.ndarray, bboxes2: np.ndarray):
     return iou
 
 def draw_boxes(img: np.ndarray, box: List[int], thickness: int, class_names: Tuple[str], label: int, 
-               score: float, colors: List[Tuple[int]], font: int=1):
+               score: float, colors: List[Tuple[int]], font: int=1) -> np.ndarray:
     #alpha = 0.7
 
     color = colors[label]
@@ -117,19 +117,13 @@ def draw_boxes(img: np.ndarray, box: List[int], thickness: int, class_names: Tup
             0.8, color, 1, cv2.LINE_AA)
     return img
 
-def assign_detections_to_trackers(trackers: List[Callable], detections: List[np.ndarray], iou_thrd: float=0.3):
+def assign_detections_to_trackers(trackers: List[Callable], detections: List[np.ndarray], iou_thr: float=0.3) -> Tuple:
 
     IOU_mat= np.zeros((len(trackers),len(detections)),dtype=np.float32)
     
     if len(trackers) and len(detections):
         IOU_mat = calc_iou(np.array(trackers), np.array(detections))
     
-    '''  
-    for t,trk in enumerate(trackers):
-        #trk = convert_to_cv2bbox(trk) 
-        for d,det in enumerate(detections):
-         #   det = convert_to_cv2bbox(det)
-            IOU_mat[t,d] = box_iou2(trk,det)'''
     
     # Produces matches       
     # Solve the maximizing the sum of IOU assignment problem using the
@@ -149,11 +143,11 @@ def assign_detections_to_trackers(trackers: List[Callable], detections: List[np.
     matches = []
    
     # For creating trackers we consider any detection with an 
-    # overlap less than iou_thrd to signifiy the existence of 
+    # overlap less than iou_thr to signifiy the existence of 
     # an untracked object
     
     for m in matched_idx:
-        if(IOU_mat[m[0],m[1]]<iou_thrd):
+        if(IOU_mat[m[0],m[1]]<iou_thr):
             unmatched_trackers.append(m[0])
             unmatched_detections.append(m[1])
         else:
