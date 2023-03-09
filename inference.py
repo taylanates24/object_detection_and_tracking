@@ -10,8 +10,8 @@ import numpy as np
 from typing import List, Tuple
 
 
-def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age: int, min_hits: int, 
-                  tracker_list: List, track_id_list: deque, colors: List[Tuple[int]], num_skip_frame: int):
+def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age: int, min_hits: int, tracker_list: List, 
+                  track_id_list: deque, colors: List[Tuple[int]], num_skip_frame: int, iou_thr: float=0.3):
 
 
     if frame_count % (num_skip_frame+1) == 0:
@@ -26,7 +26,7 @@ def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age
             x_box.append(trk.box)
 
     matched, unmatched_dets, unmatched_trks \
-    = assign_detections_to_trackers(x_box, z_box, iou_thrd = 0.3)      
+    = assign_detections_to_trackers(x_box, z_box, iou_thr = iou_thr)      
 
     if matched.size >0:
         process_matched_detections(matched, z_box, x_box, tracker_list, labels, scores)
@@ -71,6 +71,7 @@ if __name__ == "__main__":
     parser.add_argument('--skip_frame', type=int, default=0, help='Number of frames that only tracked, not detected by model.')
     parser.add_argument('--save_video', type=bool, default=True, help='Saving output video.')
     parser.add_argument('--save_video_path', type=str, default='out_best2.mp4', help='Output video path.')
+    parser.add_argument('--iou_thr', type=float, default=0.3, help='IOU threshold if SORT algorithm.')
     args = parser.parse_args()
     frame_count = 0
     tracker_list = []
@@ -95,9 +96,14 @@ if __name__ == "__main__":
                         30, size)
     
     while(cap.isOpened()):
+        
         ret, frame = cap.read()
         st = time.time()
-        image_box = process_frame(frame, detector, frame_count, args.max_age, args.min_hits, tracker_list, track_id_list, colors, args.skip_frame)
+        image_box = process_frame(img=frame, detector=detector, 
+                                  frame_count=frame_count, max_age=args.max_age, 
+                                  min_hits=args.min_hits, tracker_list=tracker_list, 
+                                  track_id_list=track_id_list, colors=colors, 
+                                  skip_frame=args.skip_frame, iou_thr=args.iou_thr)
         end = time.time()
         print('process time: ', 1000*(end-st))
         frame_count += 1
