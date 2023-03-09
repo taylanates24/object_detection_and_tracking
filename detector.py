@@ -3,11 +3,11 @@ from mmdet.apis import inference_detector
 import numpy as np
 
 
-class Detector:
+class  Detector:
     
     
-    def __init__(self, checkpoint_path='/workspaces/detection_and_tracking/yolox_m_trt.pth',
-                 model_config_path='/workspaces/detection_and_tracking/yolox_m_8x8_300e_coco.py',
+    def __init__(self, checkpoint_path='/workspaces/detection_and_tracking/yolox_xl_epoch_329_32-2map_trt.pth',
+                 model_config_path='/workspaces/detection_and_tracking/yolox_x_8x8_300e_coco.py',
                  device='cuda:0',
                  score_thr= 0.4) -> None:
         
