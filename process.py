@@ -186,11 +186,11 @@ def assign_detections_to_trackers(trackers: List[Callable], detections: List[np.
 
     unmatched_trackers, unmatched_detections = [], []
     
-    for t in len(trackers):
+    for t in range(len(trackers)):
         if(t not in matched_idx[:,0]):
             unmatched_trackers.append(t)
 
-    for d in len(detections):
+    for d in range(len(detections)):
         if(d not in matched_idx[:,1]):
             unmatched_detections.append(d)
 
