@@ -11,7 +11,23 @@ from typing import List, Tuple
 
 def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age: int, min_hits: int, tracker_list: List, 
                   track_id_list: deque, colors: List[Tuple[int]], num_skip_frame: int, iou_thr: float=0.3) -> np.ndarray:
+    """_summary_
 
+    Args:
+        img (np.ndarray): _description_
+        detector (Callable): _description_
+        frame_count (int): _description_
+        max_age (int): _description_
+        min_hits (int): _description_
+        tracker_list (List): _description_
+        track_id_list (deque): _description_
+        colors (List[Tuple[int]]): _description_
+        num_skip_frame (int): _description_
+        iou_thr (float, optional): _description_. Defaults to 0.3.
+
+    Returns:
+        np.ndarray: _description_
+    """
 
     if frame_count % (num_skip_frame+1) == 0:
         z_box, labels, scores = detector.detect_image(img)
