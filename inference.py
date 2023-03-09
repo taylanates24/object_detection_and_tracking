@@ -109,9 +109,7 @@ if __name__ == "__main__":
         
         if args.save_video:
             result.write(image_box)
-        #cv2.imshow('frame', image_box)   
-        #cv2.waitKey(20)
-        
+
     cap.release()
     
     if args.save_video:
