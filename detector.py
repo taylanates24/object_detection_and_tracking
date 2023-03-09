@@ -10,12 +10,27 @@ class Detector:
                  model_config_path: str='/workspaces/detection_and_tracking/yolox_x_8x8_300e_coco.py',
                  device: str='cuda:0',
                  score_thr: float=0.4) -> None:
+        """_summary_
+
+        Args:
+            checkpoint_path (str, optional): _description_. Defaults to '/workspaces/detection_and_tracking/yolox_xl_epoch_329_32-2map_trt.pth'.
+            model_config_path (str, optional): _description_. Defaults to '/workspaces/detection_and_tracking/yolox_x_8x8_300e_coco.py'.
+            device (_type_, optional): _description_. Defaults to 'cuda:0'.
+            score_thr (float, optional): _description_. Defaults to 0.4.
+        """
         
         self.detector = create_wrap_detector(checkpoint_path, model_config_path, device)
         self.score_thr = score_thr
 
     def detect_image(self, image: np.ndarray) -> Tuple:
+        """_summary_
 
+        Args:
+            image (np.ndarray): _description_
+
+        Returns:
+            Tuple: _description_
+        """
         result = inference_detector(self.detector, image)
         
         if isinstance(result, tuple):

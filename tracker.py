@@ -5,7 +5,8 @@ from typing import List
 
 class Tracker():
     def __init__(self):
-
+        """_summary_
+        """
         self.id = 0 
         self.box = [] 
         self.hits = 0 
@@ -45,12 +46,20 @@ class Tracker():
         self.R = np.diag(self.R_diag_array)
         
         
-    def update_R(self):   
+    def update_R(self):
+        """_summary_
+        """
+           
         R_diag_array = self.R_scaler * np.array([self.L, self.L, self.L, self.L])
         self.R = np.diag(R_diag_array)
         
         
     def kalman_filter(self, z: List[int]): 
+        """_summary_
+
+        Args:
+            z (List[int]): _description_
+        """
         
         self.x_state = dot(self.F, self.x_state)
         self.P = dot(self.F, self.P).dot(self.F.T) + self.Q
@@ -64,6 +73,8 @@ class Tracker():
         
         
     def predict_only(self):  
+        """_summary_
+        """
         
         self.x_state = dot(self.F, self.x_state)
         self.P = dot(self.F, self.P).dot(self.F.T) + self.Q

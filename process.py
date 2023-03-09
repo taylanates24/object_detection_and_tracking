@@ -8,6 +8,17 @@ import cv2
 def process_unmatched_detections(z_box: List[np.ndarray], unmatched_dets: np.ndarray, 
                                  x_box: List[int], tracker_list: List[Callable], track_id_list: deque, 
                                  labels: List[int], scores: np.ndarray) -> None:
+    """_summary_
+
+    Args:
+        z_box (List[np.ndarray]): _description_
+        unmatched_dets (np.ndarray): _description_
+        x_box (List[int]): _description_
+        tracker_list (List[Callable]): _description_
+        track_id_list (deque): _description_
+        labels (List[int]): _description_
+        scores (np.ndarray): _description_
+    """
     
     for idx in unmatched_dets:
         
@@ -35,7 +46,16 @@ def process_unmatched_detections(z_box: List[np.ndarray], unmatched_dets: np.nda
 
 def process_matched_detections(matched: np.ndarray, z_box: List, x_box: List[List[int]], 
                                tracker_list: List[Callable], labels: np.ndarray, scores: np.ndarray) -> None:
+    """_summary_
 
+    Args:
+        matched (np.ndarray): _description_
+        z_box (List): _description_
+        x_box (List[List[int]]): _description_
+        tracker_list (List[Callable]): _description_
+        labels (np.ndarray): _description_
+        scores (np.ndarray): _description_
+    """
     for trk_idx, det_idx in matched:
         
         z = z_box[det_idx]
@@ -60,7 +80,13 @@ def process_matched_detections(matched: np.ndarray, z_box: List, x_box: List[Lis
 
 
 def process_unmatched_trackers(unmatched_trks: np.ndarray, x_box: List[List[int]], tracker_list: List[Callable]) -> None:
-    
+    """_summary_
+
+    Args:
+        unmatched_trks (np.ndarray): _description_
+        x_box (List[List[int]]): _description_
+        tracker_list (List[Callable]): _description_
+    """
     for trk_idx in unmatched_trks:
         
         tmp_trk = tracker_list[trk_idx]
@@ -73,7 +99,15 @@ def process_unmatched_trackers(unmatched_trks: np.ndarray, x_box: List[List[int]
         x_box[trk_idx] = x_state
 
 def calc_iou(bboxes1: np.ndarray, bboxes2: np.ndarray) -> float:
-    
+    """_summary_
+
+    Args:
+        bboxes1 (np.ndarray): _description_
+        bboxes2 (np.ndarray): _description_
+
+    Returns:
+        float: _description_
+    """
     x11, y11, x12, y12 = np.split(bboxes1, 4, axis=1)
     x21, y21, x22, y22 = np.split(bboxes2, 4, axis=1)
     xA = np.maximum(x11, np.transpose(x21))
@@ -86,12 +120,28 @@ def calc_iou(bboxes1: np.ndarray, bboxes2: np.ndarray) -> float:
     
     if not (boxAArea + np.transpose(boxBArea) - interArea).all():
         return np.zeros((len(bboxes1),len(bboxes2)),dtype=np.float32)
+    
     iou = interArea / (boxAArea + np.transpose(boxBArea) - interArea)
+    
     return iou
 
 def draw_boxes(img: np.ndarray, box: List[int], thickness: int, class_names: Tuple[str], label: int, 
                score: float, colors: List[Tuple[int]], font: int=1) -> np.ndarray:
+    """_summary_
 
+    Args:
+        img (np.ndarray): _description_
+        box (List[int]): _description_
+        thickness (int): _description_
+        class_names (Tuple[str]): _description_
+        label (int): _description_
+        score (float): _description_
+        colors (List[Tuple[int]]): _description_
+        font (int, optional): _description_. Defaults to 1.
+
+    Returns:
+        np.ndarray: _description_
+    """
     color = colors[label]
     pos = np.array([box[1], box[0]]) - thickness
 
@@ -113,10 +163,20 @@ def draw_boxes(img: np.ndarray, box: List[int], thickness: int, class_names: Tup
 
     cv2.putText(img, label_text, (x, y + text_h ), font, 
             0.8, color, 1, cv2.LINE_AA)
+    
     return img
 
 def assign_detections_to_trackers(trackers: List[Callable], detections: List[np.ndarray], iou_thr: float=0.3) -> Tuple:
+    """_summary_
 
+    Args:
+        trackers (List[Callable]): _description_
+        detections (List[np.ndarray]): _description_
+        iou_thr (float, optional): _description_. Defaults to 0.3.
+
+    Returns:
+        Tuple: _description_
+    """
     IOU_mat= np.zeros((len(trackers),len(detections)),dtype=np.float32)
     
     if len(trackers) and len(detections):
@@ -125,25 +185,28 @@ def assign_detections_to_trackers(trackers: List[Callable], detections: List[np.
     matched_idx = linear_assignment(-IOU_mat)        
 
     unmatched_trackers, unmatched_detections = [], []
-    for t,trk in enumerate(trackers):
+    
+    for t in len(trackers):
         if(t not in matched_idx[:,0]):
             unmatched_trackers.append(t)
 
-    for d, det in enumerate(detections):
+    for d in len(detections):
         if(d not in matched_idx[:,1]):
             unmatched_detections.append(d)
 
     matches = []
    
     for m in matched_idx:
-        if(IOU_mat[m[0],m[1]]<iou_thr):
+        
+        if(IOU_mat[m[0],m[1]] < iou_thr):
             unmatched_trackers.append(m[0])
             unmatched_detections.append(m[1])
         else:
             matches.append(m.reshape(1,2))
     
-    if(len(matches)==0):
+    if (len(matches) == 0):
         matches = np.empty((0,2),dtype=int)
+        
     else:
         matches = np.concatenate(matches,axis=0)
     
