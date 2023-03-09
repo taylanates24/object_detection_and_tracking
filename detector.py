@@ -41,11 +41,11 @@ class Detector:
             bboxes = bboxes[inds, :]
             labels = labels[inds]
             
-        #img = mmcv.bgr2rgb(img)
+
         bboxes = bboxes[:,:4]
         new_boxes = np.empty_like(bboxes)
         new_boxes[:, 0], new_boxes[:, 1], new_boxes[:, 2], new_boxes[:, 3] = bboxes[:, 1], bboxes[:, 0], bboxes[:, 3], bboxes[:, 2]
-        #new_boxes = new_boxes.astype('uint8')
+
         z_box = list(new_boxes)
         
         return z_box, labels, scores
