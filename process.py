@@ -16,7 +16,7 @@ def process_unmatched_detections(z_box: List[np.ndarray], unmatched_dets: np.nda
         score = scores[idx]
         
         z = np.expand_dims(z, axis=0).T
-        tmp_trk = Tracker() # Create a new tracker
+        tmp_trk = Tracker() 
         
         x = np.array([[z[0], 0, z[1], 0, z[2], 0, z[3], 0]], dtype=object).T
         tmp_trk.x_state = x
@@ -73,6 +73,7 @@ def process_unmatched_trackers(unmatched_trks: np.ndarray, x_box: List[List[int]
         x_box[trk_idx] = x_state
 
 def calc_iou(bboxes1: np.ndarray, bboxes2: np.ndarray) -> float:
+    
     x11, y11, x12, y12 = np.split(bboxes1, 4, axis=1)
     x21, y21, x22, y22 = np.split(bboxes2, 4, axis=1)
     xA = np.maximum(x11, np.transpose(x21))
@@ -90,29 +91,26 @@ def calc_iou(bboxes1: np.ndarray, bboxes2: np.ndarray) -> float:
 
 def draw_boxes(img: np.ndarray, box: List[int], thickness: int, class_names: Tuple[str], label: int, 
                score: float, colors: List[Tuple[int]], font: int=1) -> np.ndarray:
-    #alpha = 0.7
 
     color = colors[label]
     pos = np.array([box[1], box[0]]) - thickness
 
-    #label_text = str(id)
+
     label_text =f'{class_names[label]}'
     
     label_text += f'| {score:.02f}'
-    #left, top, right, bottom = int(bbox_cv2[1]), int(bbox_cv2[0]), int(bbox_cv2[3]), int(bbox_cv2[2])
+    
     pt1 = (int(box[1]), int(box[0]))
     pt2 = (int(box[3]), int(box[2]))
     cv2.rectangle(img,pt1,pt2,color,2)
-    #overlay = img.copy()        #(241,101,72)
     text_size, _ = cv2.getTextSize(label_text, font, 0.8, 1)
-    #text_scale = int((int(box[1]) - int(box[0])) / 200)
+
     text_w, text_h = text_size
     text_w += 2
     text_h += 2
 
     x, y = pos
-    #cv2.rectangle(overlay, pos, (x + text_w, y + text_h), (0,0,0), -1)
-    #img = cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0)
+
     cv2.putText(img, label_text, (x, y + text_h ), font, 
             0.8, color, 1, cv2.LINE_AA)
     return img
@@ -123,11 +121,6 @@ def assign_detections_to_trackers(trackers: List[Callable], detections: List[np.
     
     if len(trackers) and len(detections):
         IOU_mat = calc_iou(np.array(trackers), np.array(detections))
-    
-    
-    # Produces matches       
-    # Solve the maximizing the sum of IOU assignment problem using the
-    # Hungarian algorithm (also known as Munkres algorithm)
     
     matched_idx = linear_assignment(-IOU_mat)        
 
@@ -142,10 +135,6 @@ def assign_detections_to_trackers(trackers: List[Callable], detections: List[np.
 
     matches = []
    
-    # For creating trackers we consider any detection with an 
-    # overlap less than iou_thr to signifiy the existence of 
-    # an untracked object
-    
     for m in matched_idx:
         if(IOU_mat[m[0],m[1]]<iou_thr):
             unmatched_trackers.append(m[0])
