@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import cv2
 from collections import deque
 import argparse
@@ -11,7 +10,7 @@ from typing import List, Tuple
 
 
 def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age: int, min_hits: int, tracker_list: List, 
-                  track_id_list: deque, colors: List[Tuple[int]], num_skip_frame: int, iou_thr: float=0.3):
+                  track_id_list: deque, colors: List[Tuple[int]], num_skip_frame: int, iou_thr: float=0.3) -> np.ndarray:
 
 
     if frame_count % (num_skip_frame+1) == 0:
@@ -28,31 +27,31 @@ def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age
     matched, unmatched_dets, unmatched_trks \
     = assign_detections_to_trackers(x_box, z_box, iou_thr = iou_thr)      
 
-    if matched.size >0:
+    if matched.size > 0:
         process_matched_detections(matched, z_box, x_box, tracker_list, labels, scores)
         
-    if len(unmatched_dets)>0:
+    if len(unmatched_dets) > 0:
         process_unmatched_detections(z_box, unmatched_dets, x_box, tracker_list, track_id_list, labels, scores)          
     
-    if len(unmatched_trks)>0:
+    if len(unmatched_trks) > 0:
         process_unmatched_trackers(unmatched_trks, x_box, tracker_list)
 
     for trk in tracker_list:
-        if ((trk.hits >= min_hits) and (trk.no_losses <=max_age)):
+        if ((trk.hits >= min_hits) and (trk.no_losses <= max_age)):
 
              x_cv2 = trk.box
              label = trk.label
              score = trk.score
              img = draw_boxes(img, x_cv2, 2, detector.detector.CLASSES, label, score, colors)
 
-    deleted_tracks = filter(lambda x: x.no_losses >max_age, tracker_list)  
+    deleted_tracks = filter(lambda x: x.no_losses > max_age, tracker_list)  
 
     for trk in deleted_tracks:
             track_id_list.append(trk.id)
             if len(track_id_list) > 50:
                 del track_id_list[0]
 
-    tracker_list = [x for x in tracker_list if x.no_losses<=max_age]    
+    tracker_list = [x for x in tracker_list if x.no_losses <= max_age]    
 
     return img
 
@@ -103,7 +102,7 @@ if __name__ == "__main__":
                                   frame_count=frame_count, max_age=args.max_age, 
                                   min_hits=args.min_hits, tracker_list=tracker_list, 
                                   track_id_list=track_id_list, colors=colors, 
-                                  skip_frame=args.skip_frame, iou_thr=args.iou_thr)
+                                  num_skip_frame=args.skip_frame, iou_thr=args.iou_thr)
         end = time.time()
         print('process time: ', 1000*(end-st))
         frame_count += 1
