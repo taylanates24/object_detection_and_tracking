@@ -1,20 +1,20 @@
 from mmdet2trt.apis import create_wrap_detector
 from mmdet.apis import inference_detector
 import numpy as np
-
+from typing import Tuple
 
 class Detector:
     
     
-    def __init__(self, checkpoint_path='/workspaces/detection_and_tracking/yolox_xl_epoch_329_32-2map_trt.pth',
-                 model_config_path='/workspaces/detection_and_tracking/yolox_x_8x8_300e_coco.py',
-                 device='cuda:0',
-                 score_thr= 0.4) -> None:
+    def __init__(self, checkpoint_path: str='/workspaces/detection_and_tracking/yolox_xl_epoch_329_32-2map_trt.pth',
+                 model_config_path: str='/workspaces/detection_and_tracking/yolox_x_8x8_300e_coco.py',
+                 device: str='cuda:0',
+                 score_thr: float=0.4) -> None:
         
         self.detector = create_wrap_detector(checkpoint_path, model_config_path, device)
         self.score_thr = score_thr
 
-    def detect_image(self, image):
+    def detect_image(self, image: np.ndarray) -> Tuple:
 
         result = inference_detector(self.detector, image)
         
