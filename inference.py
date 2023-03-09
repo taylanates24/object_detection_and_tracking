@@ -114,7 +114,7 @@ if __name__ == "__main__":
         
         ret, frame = cap.read()
         st = time.time()
-        image_box = process_frame(img=frame, detector=detector, 
+        image = process_frame(img=frame, detector=detector, 
                                   frame_count=frame_count, max_age=args.max_age, 
                                   min_hits=args.min_hits, tracker_list=tracker_list, 
                                   track_id_list=track_id_list, colors=colors, 
@@ -124,7 +124,7 @@ if __name__ == "__main__":
         frame_count += 1
         
         if args.save_video:
-            result.write(image_box)
+            result.write(image)
 
     cap.release()
     
