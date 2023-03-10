@@ -22,11 +22,11 @@ class TestTracker(unittest.TestCase):
         self.assertEqual(len(self.tracker.x_state), 0)
         self.assertEqual(self.tracker.dt, 1.)
         
-    def test_kalman_filter(self):
+    def test_prediction_and_update(self):
 
         z = self.init_state()
         
-        self.tracker.kalman_filter(z)
+        self.tracker.prediction_and_update(z)
         self.assertEqual(len(self.tracker.x_state), 8)
         self.assertEqual(len(self.tracker.P), 8)
         self.assertEqual(self.tracker.x_state.dtype, int)
@@ -35,7 +35,7 @@ class TestTracker(unittest.TestCase):
         
         z = self.init_state()
         
-        self.tracker.kalman_filter(z)
+        self.tracker.prediction_and_update(z)
         
         self.tracker.predict_only()
         self.assertEqual(len(self.tracker.x_state), 8)

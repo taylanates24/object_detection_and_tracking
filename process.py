@@ -66,7 +66,7 @@ def process_matched_detections(matched: np.ndarray, z_box: List, x_box: List[Lis
         
         tmp_trk = tracker_list[trk_idx]
         
-        tmp_trk.kalman_filter(z)
+        tmp_trk.prediction_and_update(z)
         
         x_state = tmp_trk.x_state.T[0].tolist()
         x_state = [x_state[0], x_state[2], x_state[4], x_state[6]]
