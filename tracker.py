@@ -74,7 +74,7 @@ class Tracker():
         self.R = np.diag(R_diag_array)
         
         
-    def kalman_filter(self, z: List[int]): 
+    def prediction_and_update(self, z: List[int]): 
         """Implements prediction and update phases of the Kalman Filter.
 
         Args:
