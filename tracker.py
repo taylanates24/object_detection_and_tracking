@@ -7,7 +7,7 @@ class Tracker():
     def __init__(self, id: int=0, box: List[int]=[], hits: int=0, no_losses: int=0, label: int=None, score: float=None,
                  x_state: List=None, dt: float=1.0, F: np.ndarray=None, H: np.ndarray=None, L: float=10.0, 
                  Q_comp_mat: np.ndarray=None, R_scalar: float=1.0):
-        """The Kalman Tracker class.
+        """The Kalman Filter class.
 
         Args:
             id (int, optional): ID of tracker object. Defaults to 0.
