@@ -8,16 +8,16 @@ from utils import calc_iou
 def process_unmatched_detections(z_box: List[np.ndarray], unmatched_dets: np.ndarray, 
                                  x_box: List[int], tracker_list: List[Callable], track_id_list: deque, 
                                  labels: List[int], scores: np.ndarray) -> None:
-    """_summary_
+    """Creates new tracker for new detections and updates the trackers.
 
     Args:
-        z_box (List[np.ndarray]): _description_
-        unmatched_dets (np.ndarray): _description_
-        x_box (List[int]): _description_
-        tracker_list (List[Callable]): _description_
-        track_id_list (deque): _description_
-        labels (List[int]): _description_
-        scores (np.ndarray): _description_
+        z_box (List[np.ndarray]): Detection bounding boxes.
+        unmatched_dets (np.ndarray): The array of unmatched (new) detections.
+        x_box (List[int]): The bounding boxes coming from trackers.
+        tracker_list (List[Callable]): The list of tracker objects.
+        track_id_list (deque): The list of tracker IDs.
+        labels (List[int]): The labels of detected object in the image.
+        scores (np.ndarray): The confidence scores of detected object in the image.
     """
     
     for idx in unmatched_dets:
@@ -46,15 +46,15 @@ def process_unmatched_detections(z_box: List[np.ndarray], unmatched_dets: np.nda
 
 def process_matched_detections(matched: np.ndarray, z_box: List, x_box: List[List[int]], 
                                tracker_list: List[Callable], labels: np.ndarray, scores: np.ndarray) -> None:
-    """_summary_
+    """Kalman Filter's prediction and update functions take place in this function. Each tracker comes with a detection.
 
     Args:
-        matched (np.ndarray): _description_
-        z_box (List): _description_
-        x_box (List[List[int]]): _description_
-        tracker_list (List[Callable]): _description_
-        labels (np.ndarray): _description_
-        scores (np.ndarray): _description_
+        matched (np.ndarray): The array of matched trackers and detections.
+        z_box (List): Detection bounding boxes.
+        x_box (List[List[int]]): Tracker bounding boxes
+        tracker_list (List[Callable]): The list of tracker objects.
+        labels (np.ndarray): The labels of detected object in the image.
+        scores (np.ndarray): The confidence scores of detected object in the image.
     """
     for trk_idx, det_idx in matched:
         
@@ -80,7 +80,7 @@ def process_matched_detections(matched: np.ndarray, z_box: List, x_box: List[Lis
 
 
 def process_unmatched_trackers(unmatched_trks: np.ndarray, x_box: List[List[int]], tracker_list: List[Callable]) -> None:
-    """_summary_
+    """Checks the unmatched trackers state, predicts new location of objects and deletes the trackers if they exceed max_age.
 
     Args:
         unmatched_trks (np.ndarray): _description_
@@ -100,15 +100,15 @@ def process_unmatched_trackers(unmatched_trks: np.ndarray, x_box: List[List[int]
 
 
 def assign_detections_to_trackers(trackers: List[Callable], detections: List[np.ndarray], iou_thr: float=0.3) -> Tuple:
-    """_summary_
+    """Matches the detections and the trackers using the Hungarian algorithm.
 
     Args:
-        trackers (List[Callable]): _description_
-        detections (List[np.ndarray]): _description_
-        iou_thr (float, optional): _description_. Defaults to 0.3.
+        trackers (List[Callable]): List of tracker objects.
+        detections (List[np.ndarray]): The bounding boxes of detected objects in the frame.
+        iou_thr (float, optional): The IOU threshold. This is used to match two objects in consecutive frames. Defaults to 0.3.
 
     Returns:
-        Tuple: _description_
+        Tuple: The list of matched detection and trackers, unmatched detections and unmathced trackers.
     """
     IOU_mat= np.zeros((len(trackers),len(detections)),dtype=np.float32)
     
