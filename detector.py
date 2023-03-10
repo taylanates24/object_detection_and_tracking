@@ -1,7 +1,7 @@
 from mmdet2trt.apis import create_wrap_detector
 from mmdet.apis import inference_detector
 import numpy as np
-from typing import Tuple
+from typing import Tuple, List
 
 class Detector:
     
@@ -9,7 +9,8 @@ class Detector:
     def __init__(self, checkpoint_path: str='/workspaces/detection_and_tracking/yolox_xl_epoch_329_32-2map_trt.pth',
                  model_config_path: str='/workspaces/detection_and_tracking/yolox_x_8x8_300e_coco.py',
                  device: str='cuda:0',
-                 score_thr: float=0.4) -> None:
+                 score_thr: float=0.4,
+                 class_names: List[str]=None) -> None:
         """The class in whic the object detection phase occurs. The TensorRT module runs in this class.
 
         Args:
@@ -17,9 +18,12 @@ class Detector:
             model_config_path (str, optional): The config path of the model. Defaults to '/workspaces/detection_and_tracking/yolox_x_8x8_300e_coco.py'.
             device (_type_, optional): The device where object detection occurs. Defaults to 'cuda:0'.
             score_thr (float, optional): The confidence threshold of the TensorRT module. Defaults to 0.4.
+            class_names (List[str]): The class names of the dataset.
         """
         
         self.detector = create_wrap_detector(checkpoint_path, model_config_path, device)
+        if class_names is not None:
+            self.detector.CLASSES = class_names
         self.score_thr = score_thr
 
     def detect_image(self, image: np.ndarray) -> Tuple:
