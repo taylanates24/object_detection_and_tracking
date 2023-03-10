@@ -32,6 +32,7 @@ def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age
 
     if frame_count % (num_skip_frame+1) == 0:
         z_box, labels, scores = detector.detect_image(img)
+        
     else:
         z_box, labels, scores = [], [], []
 
@@ -41,8 +42,7 @@ def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age
         for trk in tracker_list:
             x_box.append(trk.box)
 
-    matched, unmatched_dets, unmatched_trks \
-    = assign_detections_to_trackers(x_box, z_box, iou_thr = iou_thr)      
+    matched, unmatched_dets, unmatched_trks = assign_detections_to_trackers(x_box, z_box, iou_thr = iou_thr)      
 
     if matched.size > 0:
         process_matched_detections(matched, z_box, x_box, tracker_list, labels, scores)
@@ -54,6 +54,7 @@ def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age
         process_unmatched_trackers(unmatched_trks, x_box, tracker_list)
 
     for trk in tracker_list:
+        
         if ((trk.hits >= min_hits) and (trk.no_losses <= max_age)):
 
              x_cv2 = trk.box
@@ -64,6 +65,7 @@ def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age
     deleted_tracks = filter(lambda x: x.no_losses > max_age, tracker_list)  
 
     for trk in deleted_tracks:
+        
             track_id_list.append(trk.id)
             if len(track_id_list) > 50:
                 del track_id_list[0]
@@ -88,7 +90,9 @@ if __name__ == "__main__":
     parser.add_argument('--save_video', type=bool, default=True, help='Saving output video.')
     parser.add_argument('--save_video_path', type=str, default='out_best2.mp4', help='Output video path.')
     parser.add_argument('--iou_thr', type=float, default=0.3, help='IOU threshold if SORT algorithm.')
+    
     args = parser.parse_args()
+    
     frame_count = 0
     tracker_list = []
 
@@ -96,6 +100,7 @@ if __name__ == "__main__":
 
     colors = [(255, 255, 0), (0, 255, 255), (241,101,72), (128, 128, 0), (128, 0, 128), (0, 0, 255), (128, 0, 128), (128, 0, 0),
               (128, 0, 128), (255, 0, 255)]
+   
     class_names = ('pedestrian', 'rider', 'car', 'truck', 'bus', 'train', 'motorcycle', 'bicycle', 'traffic light', 'traffic sign')
     
     detector = Detector(checkpoint_path=args.checkpoint, 
@@ -107,6 +112,7 @@ if __name__ == "__main__":
     cap = cv2.VideoCapture(args.input_video)
     
     if args.save_video:
+   
         frame_width = int(cap.get(3))
         frame_height = int(cap.get(4))
         size = (frame_width, frame_height)
