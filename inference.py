@@ -11,22 +11,23 @@ from utils import *
 
 def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age: int, min_hits: int, tracker_list: List, 
                   track_id_list: deque, colors: List[Tuple[int]], num_skip_frame: int, iou_thr: float=0.3) -> np.ndarray:
-    """_summary_
+    """The function which processes the frame, detects the objects and tracks them.
 
     Args:
-        img (np.ndarray): _description_
-        detector (Callable): _description_
-        frame_count (int): _description_
-        max_age (int): _description_
-        min_hits (int): _description_
-        tracker_list (List): _description_
-        track_id_list (deque): _description_
-        colors (List[Tuple[int]]): _description_
-        num_skip_frame (int): _description_
-        iou_thr (float, optional): _description_. Defaults to 0.3.
+        img (np.ndarray): Input image.
+        detector (Callable): TensorRT detection module.
+        frame_count (int): The current frame number.
+        max_age (int): A tracker will be deleted if there is no detection until the max_age.
+        min_hits (int): If a detection show up min_hits time, a tracker will be assignet to that detection.
+        tracker_list (List): The list of tracker objects.
+        track_id_list (deque): The list of tracker IDs.
+        colors (List[Tuple[int]]): The colors of each classes in the dataset.
+        num_skip_frame (int): Number of frames which passes the detection, only goes to tracker.
+        iou_thr (float, optional): The threshold in which SORT algorithm uses to assign two object in two consecutive 
+                frames. Defaults to 0.3.
 
     Returns:
-        np.ndarray: _description_
+        np.ndarray: The image with tracker bounding boxes.
     """
 
     if frame_count % (num_skip_frame+1) == 0:
