@@ -5,7 +5,6 @@ from typing import Tuple, List
 
 class Detector:
     
-    
     def __init__(self, checkpoint_path: str='/workspaces/detection_and_tracking/yolox_xl_epoch_329_32-2map_trt.pth',
                  model_config_path: str='/workspaces/detection_and_tracking/yolox_x_8x8_300e_coco.py',
                  device: str='cuda:0',
