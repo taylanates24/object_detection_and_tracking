@@ -1,6 +1,5 @@
 import unittest
 import numpy as np
-from typing import List, Callable, Deque
 from collections import deque
 import sys
 sys.path.append('/workspaces/detection_and_tracking')
