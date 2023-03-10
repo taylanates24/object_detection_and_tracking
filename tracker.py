@@ -5,7 +5,8 @@ from typing import List
 
 class Tracker():
     def __init__(self):
-        """_summary_
+        """
+        Kalman Filter class.
         """
         self.id = 0 
         self.box = [] 
@@ -47,7 +48,7 @@ class Tracker():
         
         
     def update_R(self):
-        """_summary_
+        """Updates the measurement covariance, R.
         """
            
         R_diag_array = self.R_scaler * np.array([self.L, self.L, self.L, self.L])
@@ -55,10 +56,10 @@ class Tracker():
         
         
     def kalman_filter(self, z: List[int]): 
-        """_summary_
+        """Implements prediction and update phases of the Kalman Filter.
 
         Args:
-            z (List[int]): _description_
+            z (List[int]): The bounding box comes from the detector.
         """
         
         self.x_state = dot(self.F, self.x_state)
@@ -73,7 +74,7 @@ class Tracker():
         
         
     def predict_only(self):  
-        """_summary_
+        """Implements the prediction phase of the Kalman Filter.
         """
         
         self.x_state = dot(self.F, self.x_state)
