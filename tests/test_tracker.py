@@ -9,6 +9,7 @@ from tracker import Tracker
 class TestTracker(unittest.TestCase):
     
     def setUp(self):
+        
         self.tracker = Tracker()
         
     def test_initial_values(self):
@@ -38,6 +39,7 @@ class TestTracker(unittest.TestCase):
         self.tracker.prediction_and_update(z)
         
         self.tracker.predict_only()
+        
         self.assertEqual(len(self.tracker.x_state), 8)
         self.assertEqual(len(self.tracker.P), 8)
         self.assertEqual(self.tracker.x_state.dtype, int)
@@ -48,6 +50,7 @@ class TestTracker(unittest.TestCase):
         z = [10, 20, 30, 40]
         z = np.expand_dims(z, axis=0).T
         x = np.array([[z[0], 0, z[1], 0, z[2], 0, z[3], 0]], dtype=object).T
+        
         self.tracker.x_state = x
         self.tracker.predict_only()
         
