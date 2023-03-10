@@ -7,7 +7,7 @@ from tkinter import *
 import time
 import numpy as np
 from typing import List, Tuple
-
+from utils import *
 
 def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age: int, min_hits: int, tracker_list: List, 
                   track_id_list: deque, colors: List[Tuple[int]], num_skip_frame: int, iou_thr: float=0.3) -> np.ndarray:
