@@ -4,14 +4,14 @@ import cv2
 
 
 def calc_iou(bboxes1: np.ndarray, bboxes2: np.ndarray) -> float:
-    """_summary_
+    """Calculates the intersection of union of given two bounding box arrays in a vectorized way.
 
     Args:
-        bboxes1 (np.ndarray): _description_
-        bboxes2 (np.ndarray): _description_
+        bboxes1 (np.ndarray): The first array of bounding boxes.
+        bboxes2 (np.ndarray): The second array of bounding boxes.
 
     Returns:
-        float: _description_
+        float: The intersection over union.
     """
     x11, y11, x12, y12 = np.split(bboxes1, 4, axis=1)
     x21, y21, x22, y22 = np.split(bboxes2, 4, axis=1)
@@ -32,20 +32,20 @@ def calc_iou(bboxes1: np.ndarray, bboxes2: np.ndarray) -> float:
 
 def draw_boxes(img: np.ndarray, box: List[int], thickness: int, class_names: Tuple[str], label: int, 
                score: float, colors: List[Tuple[int]], font: int=1) -> np.ndarray:
-    """_summary_
+    """Draws bounding boxes on the image.
 
     Args:
-        img (np.ndarray): _description_
-        box (List[int]): _description_
-        thickness (int): _description_
-        class_names (Tuple[str]): _description_
-        label (int): _description_
-        score (float): _description_
-        colors (List[Tuple[int]]): _description_
-        font (int, optional): _description_. Defaults to 1.
+        img (np.ndarray): The image.
+        box (List[int]): The bounding box of a detected object in the image.
+        thickness (int): Thickness of the bounding box rectangle.
+        class_names (Tuple[str]): Class names of the dataset.
+        label (int): The label of the detected object.
+        score (float): The confidence score of the detected object.
+        colors (List[Tuple[int]]): Colors of each class in the dataset.
+        font (int, optional): Font of class names which will print on the image. Defaults to 1.
 
     Returns:
-        np.ndarray: _description_
+        np.ndarray: The image with bounding boxes.
     """
     color = colors[label]
     pos = np.array([box[1], box[0]]) - thickness
