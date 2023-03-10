@@ -38,7 +38,7 @@ class TestProcessMatchedDetections(unittest.TestCase):
     
     def test_process_matched_detections(self):
         
-        track_id_list = deque(range(10))
+        track_id_list = deque([0, 1, 2])
         z_box = [[0, 1, 2, 3], [10, 11, 12, 13]]
         x_box = [[0, 1, 2, 3], [10, 11, 12, 13]]
         unmatched_dets = [0, 1]
