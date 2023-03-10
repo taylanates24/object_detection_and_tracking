@@ -94,12 +94,15 @@ if __name__ == "__main__":
 
     track_id_list = deque(list(range(30)))
 
-    detector = Detector(checkpoint_path=args.checkpoint, 
-                        model_config_path=args.config,
-                        score_thr=args.score_thr)
-    
     colors = [(255, 255, 0), (0, 255, 255), (241,101,72), (128, 128, 0), (128, 0, 128), (0, 0, 255), (128, 0, 128), (128, 0, 0),
               (128, 0, 128), (255, 0, 255)]
+    class_names = ('pedestrian', 'rider', 'car', 'truck', 'bus', 'train', 'motorcycle', 'bicycle', 'traffic light', 'traffic sign')
+    
+    detector = Detector(checkpoint_path=args.checkpoint, 
+                        model_config_path=args.config,
+                        score_thr=args.score_thr,
+                        class_names=class_names)
+    
 
     cap = cv2.VideoCapture(args.input_video)
     
