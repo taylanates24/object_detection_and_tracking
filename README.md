@@ -78,8 +78,9 @@ The overall algorithm is as follows:
 ![overall algorithm](pics/SORT.jpg)
 
 In this flowchart:
-    `Association` is the Hungarian algorithm which matches detectors and trackers using an intersection over union (IOU) matrix.
+    
+`Association` is the Hungarian algorithm which matches detectors and trackers using an intersection over union (IOU) matrix.
 
-    `Detection` is a TensorRT module of YOLOX-x model.
+`Detection` is a TensorRT module of YOLOX-x model.
 
-    `min_hits` is the the number of consecutive frames where an object appears. After min_hits, a tracker is created for that object. The aim is minimization of false positives. It can be changed in `inference.yaml` file.
+`min_hits` is the the number of consecutive frames where an object appears. After min_hits, a tracker is created for that object. The aim is minimization of false positives. It can be changed in `inference.yaml` file.
