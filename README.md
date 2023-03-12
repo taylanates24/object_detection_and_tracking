@@ -101,7 +101,7 @@ In this flowchart:
 `min_hits` is the number of consecutive frames where an object appears. After min_hits, a tracker is created for that object. The aim is the minimization of false positives. It can be changed in `inference.yaml` file.
 
 `max_age` is the number of consecutive frames that a tracked object cannot be detected. That means the object may go out of frame. After `max_age`, the tracker is deleted.
-
+You can also skip the detection part with `skip_frame`. This is the number of frames that passes to tracker without detection in order to increase inference time.
 If you want a more detailed explanation of Kalman Filter, TensorRT, SORT algorithm, Hungarian algorithm and how to fine-tune an mmdetection model on BDD100K dataset, you can read my blog posts on Medium. You can find example codes and reading lists as well.
 
 1) [Real-Time Object Detection And Tracking With TensorRT, Kalman Filter, and SORT Algorithm: Part 1 Training the Model](https://medium.com/@taylan.ates417311/real-time-object-detection-and-tracking-with-tensorrt-kalman-filter-and-sort-algorithm-part-1-a353143187aa)
