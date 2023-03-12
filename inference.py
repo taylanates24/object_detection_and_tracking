@@ -8,6 +8,7 @@ import time
 import numpy as np
 from typing import List, Tuple
 from utils import *
+import yaml
 
 def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age: int, min_hits: int, tracker_list: List, 
                   track_id_list: deque, colors: List[Tuple[int]], num_skip_frame: int, iou_thr: float=0.3) -> np.ndarray:
@@ -77,22 +78,14 @@ def process_frame(img: np.ndarray, detector: Callable, frame_count: int, max_age
 if __name__ == "__main__":    
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--max_age', type=int, default=3, help='Number of consecutive unmatched detection before a track is deleted.')
-    parser.add_argument('--checkpoint', type=str, default='/workspaces/detection_and_tracking/yolox-xl-best.pth', 
-                        help='The TensorRT checkpoint path.')
-    parser.add_argument('--config', type=str, default='/workspaces/detection_and_tracking/configs/yolox_x_8x8_300e_coco.py', 
-                        help='The config path of mmdetection model.')
-    parser.add_argument('--score_thr', type=int, default=0.4, help='Score threshold.')
-    parser.add_argument('--min_hits', type=int, default=2, help='Number of consecutive matches needed to establish a track.')
-    parser.add_argument('--input_video', type=str, default='/workspaces/detection_and_tracking/tokyo_1.mp4', 
-                        help='The path of input video.')
-    parser.add_argument('--skip_frame', type=int, default=0, help='Number of frames that only tracked, not detected by model.')
-    parser.add_argument('--save_video', type=bool, default=True, help='Saving output video.')
-    parser.add_argument('--save_video_path', type=str, default='out_best2.mp4', help='Output video path.')
-    parser.add_argument('--iou_thr', type=float, default=0.3, help='IOU threshold if SORT algorithm.')
-    
+    parser.add_argument('--infer_cfg', type=str, default='inference.yaml', help='inference config file')
+
     args = parser.parse_args()
     
+    opt = args.infer_cfg
+    with open(opt, 'r') as config:
+        opt = yaml.safe_load(config)
+        
     frame_count = 0
     tracker_list = []
 
@@ -103,20 +96,21 @@ if __name__ == "__main__":
    
     class_names = ('pedestrian', 'rider', 'car', 'truck', 'bus', 'train', 'motorcycle', 'bicycle', 'traffic light', 'traffic sign')
     
-    detector = Detector(checkpoint_path=args.checkpoint, 
-                        model_config_path=args.config,
-                        score_thr=args.score_thr,
+    detector = Detector(checkpoint_path=opt['detector']['checkpoint_path'], 
+                        model_config_path=opt['detector']['config'],
+                        score_thr=opt['detector']['score_thr'],
                         class_names=class_names)
     
-
-    cap = cv2.VideoCapture(args.input_video)
+    save_video = opt['save_video']
+    save_video_path = opt['save_video_path']
+    cap = cv2.VideoCapture(opt['input_video'])
     
-    if args.save_video:
+    if save_video:
    
         frame_width = int(cap.get(3))
         frame_height = int(cap.get(4))
         size = (frame_width, frame_height)
-        result = cv2.VideoWriter(args.save_video_path, 
+        result = cv2.VideoWriter(save_video_path, 
                         cv2.VideoWriter_fourcc(*'mp4v'),
                         30, size)
     
@@ -125,19 +119,19 @@ if __name__ == "__main__":
         ret, frame = cap.read()
         st = time.time()
         image = process_frame(img=frame, detector=detector, 
-                                  frame_count=frame_count, max_age=args.max_age, 
-                                  min_hits=args.min_hits, tracker_list=tracker_list, 
+                                  frame_count=frame_count, max_age=opt['tracker']['max_age'], 
+                                  min_hits=opt['tracker']['min_hits'], tracker_list=tracker_list, 
                                   track_id_list=track_id_list, colors=colors, 
-                                  num_skip_frame=args.skip_frame, iou_thr=args.iou_thr)
+                                  num_skip_frame=opt['tracker']['skip_frame'], iou_thr=opt['tracker']['iou_thr'])
         end = time.time()
         print('process time: ', 1000*(end-st))
         frame_count += 1
         
-        if args.save_video:
+        if save_video:
             result.write(image)
 
     cap.release()
     
-    if args.save_video:
+    if save_video:
         result.release()
 
