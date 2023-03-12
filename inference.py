@@ -80,7 +80,7 @@ if __name__ == "__main__":
     parser.add_argument('--max_age', type=int, default=3, help='Number of consecutive unmatched detection before a track is deleted.')
     parser.add_argument('--checkpoint', type=str, default='/workspaces/detection_and_tracking/yolox-xl-best.pth', 
                         help='The TensorRT checkpoint path.')
-    parser.add_argument('--config', type=str, default='/workspaces/detection_and_tracking/yolox_x_8x8_300e_coco.py', 
+    parser.add_argument('--config', type=str, default='/workspaces/detection_and_tracking/configs/yolox_x_8x8_300e_coco.py', 
                         help='The config path of mmdetection model.')
     parser.add_argument('--score_thr', type=int, default=0.4, help='Score threshold.')
     parser.add_argument('--min_hits', type=int, default=2, help='Number of consecutive matches needed to establish a track.')
