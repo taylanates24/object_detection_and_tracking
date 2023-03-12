@@ -66,7 +66,7 @@ docker run -v $(pwd):/workspace -it --rm --ipc host track:v1
 5 - Convert the trained mmdetection model to TensorRT:
 
 ```
-python3 convert_tensorrt.py --config /path/to/config_file --checkpoint /path/to/checkpoint_file --save_path /save/path --device 'cuda:0' --fp16 True
+python3 convert_tensorrt.py --config configs/yolox_x_8x8_300e_coco.py --checkpoint /path/to/checkpoint_file --save_path /save/path --device 'cuda:0' --fp16 True
 
 ```
 
