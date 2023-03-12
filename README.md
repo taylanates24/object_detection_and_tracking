@@ -6,6 +6,7 @@ In this repository, a coco pre-trained YOLOX-x model is finetuned on BDD100K dat
 
 The resulting video:
 
+[![Watch the video](https://youtu.be/_3Grxz8vKVs)
 
 
 
