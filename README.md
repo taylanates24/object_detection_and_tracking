@@ -30,3 +30,42 @@ project/
 ├── tracker.py
 └── utils.py
 
+## Getting Started
+To get started, follow these steps:
+
+1- Clone this repository to your local machine.
+
+```
+git clone https://github.com/taylanates24/detection_and_tracking.git
+```
+2 - Build a docker image and create a container from docker image  (recommended)
+
+```
+docker build -t track:v1 -f docker/Dockerfile .
+```
+
+```
+docker run -v $(pwd):/workspace -it --rm --ipc host track:v1
+```
+3 - Modify the configuration file inference.yaml to match your hyperparameters and input paths.
+
+4 - Convert your trained mmdetection model to TensorRT:
+
+```
+python3 convert_tensorrt.py --config /path/to/config_file --checkpoint /path/to/checkpoint_file --save_path /save/path --device 'cuda:0' --fp16 True
+
+```
+5 - Start inference by running the following code :
+
+```
+python3 inference.py --infer_cfg inference.yaml
+```
+
+
+
+6 - Run 
+```
+python3 train.py --train_cfg training.yaml --dataset_cfg coco.yml
+```
+to start training the model.
+
