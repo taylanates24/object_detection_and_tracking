@@ -3,7 +3,7 @@
 
 	"context": "..",
 
-	"dockerFile": "../Dockerfile.dev",
+	"dockerFile": "../docker/Dockerfile.all",
         // "image": "ubuntu:18.04",
 
 	"runArgs": [
@@ -15,7 +15,7 @@
 		//for GUI
 		"--privileged",
 		"-v", "/tmp/.X11-unix:/tmp/.X11-unix",
-		"-e", "DISPLAY=:1",
+		"-e", "DISPLAY=:0",
 		"--ipc", "host"
 
 	],
