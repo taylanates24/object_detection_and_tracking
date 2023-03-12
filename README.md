@@ -65,4 +65,14 @@ python3 convert_tensorrt.py --config /path/to/config_file --checkpoint /path/to/
 python3 inference.py --infer_cfg inference.yaml
 ```
 
+## The Algorithm
 
+When writing this repository, I used the following papers:
+
+1) [Optimized Object Tracking Technique Using Kalman Filter](https://arxiv.org/abs/2103.05467)
+
+2) [Simple Online and Realtime Tracking](https://arxiv.org/abs/1602.00763)
+
+The overall algorithm is as follows:
+
+![overall algorithm](pics/SORT.jpg)
