@@ -2,7 +2,7 @@
 
 In this repository, a COCO pre-trained YOLOX-x model is finetuned on BDD100K dataset. You can fine-tune any model that can be converted to tensorrt using the mmdetection-to-tensorrt repository. You can find a detailed expalanation about how to fine-tune an mmdetection model on a custom dataset in my medium blogpost:
 
-### medium blog here
+[Real-Time Object Detection And Tracking With TensorRT, Kalman Filter, and SORT Algorithm: Part 1 Training the Model](https://medium.com/@taylan.ates417311/real-time-object-detection-and-tracking-with-tensorrt-kalman-filter-and-sort-algorithm-part-1-a353143187aa)
 
 The resulting video:
 
