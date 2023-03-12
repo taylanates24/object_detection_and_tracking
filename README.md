@@ -87,7 +87,7 @@ In this flowchart:
 
 `max_age` is the number of consecutive frames that a tracked object cannot be detected. That means the object may go out of frame. After `max_age`, the tracker is deleted.
 
-If you want a more detailed explanation of Kalman Filter, TensorRT, SORT algorithm and how to fine-tune an mmdetection model on BDD100K dataset, you can readn my blog posts on Medium. You can find examlpe codes and reference lists as well.
+If you want a more detailed explanation of Kalman Filter, TensorRT, SORT algorithm and how to fine-tune an mmdetection model on BDD100K dataset, you can read my blog posts on Medium. You can find example codes and reading lists as well.
 
 1)
 
