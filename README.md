@@ -1,8 +1,12 @@
-# Object Detection and Tracking with SORT Algorithm, Kalman Filter and TensorRT
+# Real-Time Object Detection and Tracking with SORT Algorithm, Kalman Filter and TensorRT
 
 In this repository, a coco pre-trained YOLOX-x model is finetuned on BDD100K dataset. You can fine-tune any model that can be converted to tensorrt using the mmdetection-to-tensorrt repository. You can find a detailed expalanation about how to fine-tune an mmdetection model on a custom dataset in my medium blogpost:
 
 ### medium blog here
+
+You can find the resulting video in the following link:
+
+[tokyo - youtube](https://youtu.be/T1vLZz4TEuo)
 
 ## Project Structure
 ```bash
@@ -49,17 +53,25 @@ docker build -t track:v1 -f docker/Dockerfile .
 docker run -v $(pwd):/workspace -it --rm --ipc host track:v1
 ```
 
+3 - Download the trained YOLOX-x model on BDD100K dataset in the following link:
 
-3 - Convert your trained mmdetection model to TensorRT:
+[YOLOX-x 32.7 box-AP]()
+
+4 - Download the input video in the following link:
+
+[tokyo.mp4]()
+
+5 - Convert the trained mmdetection model to TensorRT:
 
 ```
 python3 convert_tensorrt.py --config /path/to/config_file --checkpoint /path/to/checkpoint_file --save_path /save/path --device 'cuda:0' --fp16 True
 
 ```
 
-4 - Modify the configuration file inference.yaml to match your hyperparameters and input paths.
+6 - Modify the configuration file inference.yaml to match your hyperparameters and input paths.
 
-5 - Start inference by running the following code :
+
+7 - Start inference by running the following code :
 
 ```
 python3 inference.py --infer_cfg inference.yaml
