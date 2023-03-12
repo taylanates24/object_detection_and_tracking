@@ -83,4 +83,6 @@ In this flowchart:
 
 `Detection` is a TensorRT module of YOLOX-x model.
 
-`min_hits` is the the number of consecutive frames where an object appears. After min_hits, a tracker is created for that object. The aim is minimization of false positives. It can be changed in `inference.yaml` file.
+`min_hits` is the number of consecutive frames where an object appears. After min_hits, a tracker is created for that object. The aim is the minimization of false positives. It can be changed in `inference.yaml` file.
+
+`max_age` is the number of consecutive frames that a tracked object cannot be detected. That means the object may go out of frame. After `max_age`, the tracker is deleted.
