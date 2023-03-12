@@ -13,7 +13,7 @@ The resulting video:
 ## Project Structure
 ```bash
 
-detection_and_tracking/
+object_detection_and_tracking/
 ├── README.md
 ├── configs /
 │   ├── _base_/
