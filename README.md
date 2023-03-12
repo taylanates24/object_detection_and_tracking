@@ -6,7 +6,7 @@ In this repository, a coco pre-trained YOLOX-x model is finetuned on BDD100K dat
 
 The resulting video:
 
-![Watch the video](https://youtu.be/_3Grxz8vKVs)
+[![Tokyo](https://img.youtube.com/vi/_3Grxz8vKVs/0.jpg)](https://www.youtube.com/watch?v=_3Grxz8vKVs)
 
 
 
