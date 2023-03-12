@@ -86,3 +86,11 @@ In this flowchart:
 `min_hits` is the number of consecutive frames where an object appears. After min_hits, a tracker is created for that object. The aim is the minimization of false positives. It can be changed in `inference.yaml` file.
 
 `max_age` is the number of consecutive frames that a tracked object cannot be detected. That means the object may go out of frame. After `max_age`, the tracker is deleted.
+
+If you want a more detailed explanation of Kalman Filter, TensorRT, SORT algorithm and how to fine-tune an mmdetection model on BDD100K dataset, you can readn my blog posts on Medium. You can find examlpe codes and reference lists as well.
+
+1)
+
+2) 
+
+3)
