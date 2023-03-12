@@ -29,6 +29,7 @@ project/
 ├── process.py
 ├── tracker.py
 └── utils.py
+```
 
 ## Getting Started
 To get started, follow these steps:
