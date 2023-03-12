@@ -3,7 +3,7 @@
 
 	"context": "..",
 
-	"dockerFile": "../docker/Dockerfile.all",
+	"dockerFile": "../docker/Dockerfile",
         // "image": "ubuntu:18.04",
 
 	"runArgs": [

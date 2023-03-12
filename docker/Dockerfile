@@ -1,8 +1,14 @@
 FROM nvcr.io/nvidia/pytorch:22.12-py3
 
-ARG CUDA=11.6
-ARG TORCH_VERSION=1.8.0
-ARG TORCHVISION_VERSION=0.9.0
+
+ARG CUDA_VERSION=11.3
+ARG PYTHON_VERSION=3.8
+ARG TORCH_VERSION=1.10.0
+ARG TORCHVISION_VERSION=0.11.0
+ARG MMCV_VERSION=1.7.1
+ARG MMDET_VERSION=2.28.1
+
+ENV TORCH_CUDA_ARCH_LIST=${CUDA_VERSION}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -21,20 +27,36 @@ RUN curl -fsSL -v -o ~/miniconda.sh -O  https://repo.anaconda.com/miniconda/Mini
 ENV PATH /opt/conda/bin:$PATH
 RUN pip install --upgrade pip
 RUN pip install -U openmim
-RUN pip3 install torch torchvision torchaudio
-### install mmcv
-RUN pip3 install pytest-runner
-RUN pip3 install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu${CUDA//./}/torch${TORCH_VERSION}/index.html
 
-### git mmdetection
-RUN pip install --upgrade pip
-RUN git clone --depth=1 https://github.com/open-mmlab/mmdetection.git /root/space/mmdetection
-RUN pip3 install numpy
-### install mmdetection
-RUN cd /root/space/mmdetection &&\
-    pip3 install -r requirements.txt &&\
-    python3 setup.py develop
+### pytorch
+RUN /opt/conda/bin/conda install pytorch==${TORCH_VERSION} torchvision==${TORCHVISION_VERSION} -c pytorch
+ENV CUDA_VERSION=11.3
+ENV TORCH_CUDA_ARCH_LIST=${CUDA_VERSION}
+RUN conda install cudatoolkit=${CUDA_VERSION} -c pytorch
 
+### install mmcv-full
+RUN /opt/conda/bin/pip install mmcv-full==${MMCV_VERSION} -f https://download.openmmlab.com/mmcv/dist/cu${CUDA_VERSION//./}/torch${TORCH_VERSION}/index.html
+
+# Copy tensorrt to conda environment
+RUN cp -r /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tensorrt* /opt/conda/lib/python${PYTHON_VERSION}/site-packages/
+
+# ------------- MMDET  -------------
+
+WORKDIR /
+RUN wget -O mmdet.tar.gz https://github.com/open-mmlab/mmdetection/archive/refs/tags/v${MMDET_VERSION}.tar.gz && \
+    mkdir mmdetection && \
+    tar -zxvf mmdet.tar.gz --directory mmdetection && \
+    cd /mmdetection && \
+    mv */* . && \
+    rm /mmdet.tar.gz
+
+WORKDIR /mmdetection
+RUN pip install --no-cache-dir -r requirements/build.txt
+RUN pip install --no-cache-dir -e .
+
+
+
+# -------------MM TENSORRT------------
 ### git amirstan plugin
 RUN git clone --depth=1 https://github.com/grimoire/amirstan_plugin.git /root/space/amirstan_plugin &&\
     cd /root/space/amirstan_plugin &&\
@@ -63,27 +85,12 @@ RUN git clone --depth=1 https://github.com/grimoire/mmdetection-to-tensorrt.git 
 RUN cd /root/space/mmdetection-to-tensorrt &&\
     python3 setup.py develop
 
-RUN python -m pip install --upgrade pip setuptools
-RUN pip install Pillow \
-      matplotlib
-
 RUN pip install --no-cache-dir \
-    grad-cam==1.4.6 \
-    tensorboard==2.10.1 \
-    fiftyone==0.17.2 \
-    fast-coco-eval \
     opencv-python==4.6.0.66 \
     scipy==1.9.3 \
-    scikit-learn==1.1.3 \
+    scikit-learn==0.22.2 \
     scikit-image==0.19.3 \
-    torch-optimizer==0.3.0 \
-    pytorch-optimizer==2.2.0 \
-    clearml==1.9.1 \
     setuptools==58.2.0 \
     numpy==1.23.5
-RUN pip install tensorrt
-RUN pip install scikit-learn==0.22.2.post1
-WORKDIR /root/space
 
-CMD [ "--help" ]
-ENTRYPOINT [ "mmdet2trt" ]
+WORKDIR /workspace
