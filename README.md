@@ -12,7 +12,8 @@ The resulting video:
 
 ## Project Structure
 ```bash
-project/
+
+detection_and_tracking/
 ├── README.md
 ├── configs /
 │   ├── _base_/
