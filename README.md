@@ -56,7 +56,7 @@ docker run -v $(pwd):/workspace -it --rm --ipc host track:v1
 
 3 - Download the trained YOLOX-x model on BDD100K dataset in the following link:
 
-[YOLOX-x 32.7 box-AP]()
+[YOLOX-x 32.7 box-AP](https://drive.google.com/file/d/1_7Uu-Z1CWztFx4oymd6gypXsmJQemnN8/view?usp=share_link)
 
 4 - Download the input video in the following link:
 
