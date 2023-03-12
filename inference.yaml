@@ -1,0 +1,14 @@
+tracker:
+  max_age: 3
+  min_hits: 1
+  skip_frame: 0
+  iou_thr: 0.3
+detector:
+  checkpoint_path: '/workspaces/detection_and_tracking/yolox-xl-best.pth'
+  config: '/workspaces/detection_and_tracking/configs/yolox_x_8x8_300e_coco.py'
+  score_thr: 0.4
+input_video: '/workspaces/detection_and_tracking/tokyo_1.mp4'
+save_video: True
+save_video_path: 'out.mp4'
+
+

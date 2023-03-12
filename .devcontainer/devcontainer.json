@@ -1,0 +1,30 @@
+{
+	"name": "Existing Dockerfile",
+
+	"context": "..",
+
+	"dockerFile": "../docker/Dockerfile.all",
+        // "image": "ubuntu:18.04",
+
+	"runArgs": [
+		"--gpus", "all",
+		//"-v", "${env:HOME}${env:USERPROFILE}/.ssh:/root/.ssh-localhost:ro",
+		//"-v", "/media/NAS/DataScienceShared/datasets/vision/structured/coco:/data",
+		//"-p", "1414:1414",
+
+		//for GUI
+		"--privileged",
+		"-v", "/tmp/.X11-unix:/tmp/.X11-unix",
+		"-e", "DISPLAY=:0",
+		"--ipc", "host"
+
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"njpwerner.autodocstring"
+			]
+		}
+	}
+}
