@@ -8,10 +8,6 @@ The resulting video:
 
 
 
-https://user-images.githubusercontent.com/66252663/224538802-554c7fa1-0508-473f-908a-005968710aa1.mp4
-
-
-
 
 ## Project Structure
 ```bash
