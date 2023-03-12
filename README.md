@@ -4,9 +4,11 @@ In this repository, a coco pre-trained YOLOX-x model is finetuned on BDD100K dat
 
 ### medium blog here
 
-You can find the resulting video in the following link:
+The resulting video:
 
-[tokyo - youtube](https://youtu.be/T1vLZz4TEuo)
+
+[tokyo](https://user-images.githubusercontent.com/66252663/224538711-6d597faf-26aa-4d5b-845b-52b8ad5d6ed2.mp4)
+
 
 ## Project Structure
 ```bash
