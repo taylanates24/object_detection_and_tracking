@@ -103,7 +103,7 @@ In this flowchart:
 
 If you want a more detailed explanation of Kalman Filter, TensorRT, SORT algorithm and how to fine-tune an mmdetection model on BDD100K dataset, you can read my blog posts on Medium. You can find example codes and reading lists as well.
 
-1) [Real-Time Object Detection And Tracking With TensorRT, Kalman Filter, and SORT Algorithm: Part 1 Training the Model]
+1) [Real-Time Object Detection And Tracking With TensorRT, Kalman Filter, and SORT Algorithm: Part 1 Training the Model](https://medium.com/@taylan.ates417311/real-time-object-detection-and-tracking-with-tensorrt-kalman-filter-and-sort-algorithm-part-1-a353143187aa)
 
 2) [Real-Time Object Detection And Tracking With TensorRT, Kalman Filter, and SORT Algorithm: Part 2 Converting The Model to TensorRT and Inference](https://medium.com/@taylan.ates417311/real-time-object-detection-and-tracking-with-tensorrt-kalman-filter-and-sort-algorithm-part-2-b3c02379d38a)
 
