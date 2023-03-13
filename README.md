@@ -114,5 +114,5 @@ If you want a more detailed explanation of Kalman Filter, TensorRT, SORT algorit
 
 ## Acknowledgements
 
-I want to thank you to @iamkucuk for his help on creating the Docker environment in this project.
+I want to thank you to [@iamkucuk] for his help on creating the Docker environment in this project.
 
