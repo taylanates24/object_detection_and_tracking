@@ -112,7 +112,4 @@ If you want a more detailed explanation of Kalman Filter, TensorRT, SORT algorit
 
 3) [Real-Time Object Detection And Tracking With TensorRT, Kalman Filter, and SORT Algorithm: Part 3 Kalman Filter and SORT Algorithm](https://medium.com/@taylan.ates417311/real-time-object-detection-and-tracking-with-tensorrt-kalman-filter-and-sort-algorithm-part-3-433d810ebc44)
 
-## Acknowledgements
-
-I want to thank you to [@iamkucuk] for his help on creating the Docker environment in this project.
 
